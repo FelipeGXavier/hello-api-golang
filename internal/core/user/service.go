@@ -1,10 +1,10 @@
 package user
 
 import (
-	"errors"
-	"hello-api-go/internal/entity"
 	"hello-api-go/internal/infra"
+	"hello-api-go/pkg/data"
 
+	"github.com/jackc/pgx/v5"
 	"go.uber.org/zap"
 )
 
@@ -13,19 +13,27 @@ type UserService struct {
 	logger zap.Logger
 }
 
-func (u UserService) Create(createUserRequest CreateUserRequest) (entity.User, error) {
+func (u UserService) Create(createUserRequest CreateUserRequest) data.Result {
 	u.logger.Info("Creating a user from request", zap.Any("request", createUserRequest));
-	
-	if !createUserRequest.Validate() {
-		return entity.User{}, errors.New("Error while validating request body");
-	}
-
 	user, err := u.userRepository.Add(createUserRequest.ToUserEntity());
 	if err != nil {
-		return entity.User{}, err;
+		u.logger.Error("Error while creating user", zap.Error(err));
+		return data.Result{Error: data.GenericError, Result: nil};
 	}
+	return data.Result{Result: user};
+}
 
-	return user, nil;
+func (u UserService) Find(userId int) data.Result {
+	user, err := u.userRepository.FindById(userId);
+	if err != nil {
+		u.logger.Error("Error while querying user", zap.Error(err));
+		if err == pgx.ErrNoRows {
+			return data.Result{Error: data.EmptyResult, Result: nil};
+		}
+		return data.Result{Error: data.GenericError, Result: nil};
+	}
+	result := fromUserEntity(user);
+	return data.Result{Result: result};
 }
 
 func MakeUserService(userRepository infra.UserRepository, logger zap.Logger) UserService {

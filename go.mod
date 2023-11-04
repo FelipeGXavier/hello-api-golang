@@ -4,6 +4,7 @@ go 1.21.0
 
 require (
 	github.com/gin-gonic/gin v1.9.1
+	github.com/go-playground/validator/v10 v10.15.5
 	github.com/jackc/pgx/v5 v5.4.3
 	github.com/spf13/viper v1.17.0
 	go.uber.org/zap v1.26.0
@@ -18,7 +19,6 @@ require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.15.5 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect

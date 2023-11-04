@@ -9,8 +9,11 @@ import (
 
 
 
+
 func main() {
+
 	config, err := configuration.LoadConfig();
+
 	if err != nil {
 		panic(err);
 	}
@@ -18,8 +21,10 @@ func main() {
 	env := *configuration.LoadEnvObject(config);
 
 	userControler := user.MakeUserController(env);
-	
+
 	router := gin.Default();
-	router.POST("/users", userControler.CreateUserHandler);
+
+	userControler.RegisterEndpoints(router);
+
 	router.Run();
 }

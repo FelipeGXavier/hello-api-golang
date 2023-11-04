@@ -39,7 +39,13 @@ func (u PgUserRepository) Delete(id int) (error) {
 }
 
 func (u PgUserRepository) FindById(id int) (entity.User, error) {
-	return entity.User{}, errors.New("Not implemented");
+	selectFindUserByIdStatement := `SELECT id, name, surname, email from users where id = $1;`;
+	var userResult entity.User;
+	err := u.db.QueryRow(context.Background(), selectFindUserByIdStatement, id).Scan(&userResult.Id, &userResult.Name, &userResult.Surname, &userResult.Email);
+	if err != nil {
+		return userResult, err;
+	}
+	return userResult, nil;
 }
 
 func MakeUserRepository(db *pgxpool.Pool) UserRepository {

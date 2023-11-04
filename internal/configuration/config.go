@@ -29,7 +29,6 @@ func LoadConfig() (Config, error) {
 		return config, err;
 	}
 
-	// Check if all env keys exist
 	for _, env := range envs {
 		if err := viper.BindEnv(env); err != nil {
 			return config, err
